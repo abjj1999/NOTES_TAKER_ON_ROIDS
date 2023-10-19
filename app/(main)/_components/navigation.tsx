@@ -10,11 +10,13 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Item from "./Item";
 import { toast } from "sonner";
+import NoteList from "./Notelist";
 
 const Navigation = () => {
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
-    const notes = useQuery(api.notes.get)
+    // const notes = useQuery(api.notes.getSidebar)
+
     const create = useMutation(api.notes.create)
 
     const isResizingRef = useRef(false);
@@ -135,11 +137,7 @@ const Navigation = () => {
           <Item onClick={handleCreate} label="New" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          {notes?.map((note) => (
-            <p>
-                {note.title}
-            </p>
-          ))}
+            <NoteList />
         </div>
         {/* bold line to increase width */}
         <div onMouseDown={handleMouseDown} onClick={resetWidth} className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0" />

@@ -2,8 +2,11 @@ import { v } from "convex/values";
 import {mutation, query} from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 
-export const get = query({
-    handler: async (ctx) => {
+export const getSidebar = query({
+    args:{
+        parentNoteId: v.optional(v.id("notes")),
+    },
+    handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
 
         if (!identity) {
@@ -12,7 +15,17 @@ export const get = query({
 
         const userId = identity.subject;
 
-        const notes = await ctx.db.query("notes").collect();
+        const notes = await ctx.db.query("notes")
+        .withIndex("by_user_parent", (q) => 
+            q
+             .eq("userId", userId)
+             .eq("parentNote", args.parentNoteId)
+        )
+        .filter((q) => 
+            q.eq(q.field("isArchived"), false)
+        )
+        .order("desc")
+        .collect();
 
         return notes;
     }
