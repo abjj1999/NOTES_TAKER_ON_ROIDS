@@ -109,3 +109,116 @@ export const archive = mutation({
 
     }
 })
+
+export const getTrash = query({
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const notes = await ctx.db.query("notes")
+            .withIndex("by_user", (q) => (
+                q.eq("userId", userId)
+            ))
+            .filter((q) => (
+                q.eq(q.field("isArchived"), true)
+            )).order("desc").collect();
+
+        return notes;
+    }
+})
+
+export const restore = mutation({
+    args: {
+        id: v.id("notes"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const existingNote = await ctx.db.get(args.id);
+
+        if (!existingNote) {
+            throw new Error("Note not found");
+        }
+
+        if (existingNote.userId !== userId) {
+            throw new Error("Not authorized");
+        }
+        const recusiveRestore = async (noteId: Id<"notes">) => {
+            const children = await ctx.db.query("notes")
+            .withIndex("by_user_parent", (q) =>(
+                q.eq("userId", userId)
+                .eq("parentNote", noteId)
+            
+            )).collect();
+
+            for (const child of children) {
+                await ctx.db.patch(child._id, {
+                    isArchived:false
+                })
+                await recusiveRestore(child._id);
+            }
+        }
+
+        const options: Partial<Doc<"notes">> = {
+            isArchived: false,
+        }
+
+        if(existingNote.parentNote){
+            const parentNote = await ctx.db.get(existingNote.parentNote);
+            if(parentNote?.isArchived){
+                options.parentNote = undefined;
+
+            }
+        }
+
+        const notes = await ctx.db.patch(args.id, options);
+
+        await recusiveRestore(args.id);
+
+        return notes;
+
+    }
+})
+
+export const remove = mutation({
+    args:{
+        id: v.id("notes"),
+    
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const existingNote = await ctx.db.get(args.id);
+
+        if (!existingNote) {
+            throw new Error("Note not found");
+        }
+
+        if (existingNote.userId !== userId) {
+            throw new Error("Not authorized");
+        }
+
+        const note = await ctx.db.delete(args.id);
+
+        return note;
+    }
+})
+
+    

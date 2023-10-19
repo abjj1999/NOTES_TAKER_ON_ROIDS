@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronLeftIcon, MenuIcon, PlusCircle, Search, Settings } from "lucide-react";
+import { ChevronLeft, ChevronLeftIcon, MenuIcon, PlusCircle, PlusIcon, Search, Settings, Trash } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -11,6 +11,10 @@ import { api } from "@/convex/_generated/api";
 import Item from "./Item";
 import { toast } from "sonner";
 import NoteList from "./Notelist";
+import {
+    Popover, PopoverTrigger, PopoverContent
+} from "@/components/ui/popover"
+import TrashBox from "./TrashBox";
 
 const Navigation = () => {
     const pathname = usePathname();
@@ -138,6 +142,22 @@ const Navigation = () => {
         </div>
         <div className="mt-4">
             <NoteList />
+            <Item
+                onClick={handleCreate}
+                icon={PlusIcon}
+                label="Add a note"
+            />
+            <Popover>
+                <PopoverTrigger className="w-full mt-4">
+                    <Item 
+                        label="Trash"
+                        icon={Trash}
+                    />
+                </PopoverTrigger>
+                <PopoverContent side={isMobile? "bottom" : "right"} className="p-0 w-72">
+                    <TrashBox />
+                </PopoverContent>
+            </Popover>
         </div>
         {/* bold line to increase width */}
         <div onMouseDown={handleMouseDown} onClick={resetWidth} className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0" />
