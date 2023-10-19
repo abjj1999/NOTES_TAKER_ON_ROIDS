@@ -19,7 +19,7 @@ const Heading: React.FC<Props> = ({ title }) => {
         Ideas, Notes, and Plans on <br />
         <span className="mt-1 underline flex justify-center items-center">
           ROIDS
-          <Syringe className="ml-3" />
+          <Syringe className="w-10 h-10 ml-3" />
         </span>
       </h1>
       <h3 className="text-base sm:text-xl md:text-2xl font-medium">
