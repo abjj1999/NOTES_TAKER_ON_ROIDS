@@ -13,11 +13,11 @@ const ModeToggle = () => {
 
     return ( 
         <div className="">
-            <Button variant="outline"  onClick={handleClick} className="rounded-xl p-3 ">
+            <Button variant="ghost" size="sm"  onClick={handleClick} className="rounded-xl p-3 ">
                 {theme === "dark" ? (
-                    <SunIcon className="w-5 h-5" />
+                    <SunIcon className="w-4 h-4" />
                 ) : (
-                    <MoonIcon className="w-5 h-5" />
+                    <MoonIcon className="w-4 h-4" />
                 )}
             </Button>
         </div>

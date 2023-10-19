@@ -9,3 +9,4 @@ To compete with Notion and Notes on Iphone.
 ## Technologies Used
 - Next.js 13
 - Tailwind CSS
+- convex (to run use `npx convex dev`)
