@@ -1,11 +1,28 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/clerk-react";
+import { PlusCircle } from "lucide-react";
+import Image from "next/image";
+
 
 const NotePage = () => {
-    
+    const {user} = useUser();
     return ( 
-        <div className="">
-            Note 
+        <div className="h-full flex flex-col items-center justify-center space-y-4">
+            <Image src="/bulb.png" alt="" height="450" width="450" className="dark:hidden opacity-80" /> 
+            <Image src="/bulbb_dark.png" alt="" height="400" width="400" className=" hidden dark:block opacity-80" /> 
+            <h2 className="text-lg font-medium ">
+                Welcome 
+                    <span className="font-bold capitalize">
+                    &nbsp;{user?.firstName}&nbsp;
+                    </span>
+                to your ROIDS
+            </h2>
+            <Button>
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Create a Note
+            </Button>
         </div>
      );
 }
