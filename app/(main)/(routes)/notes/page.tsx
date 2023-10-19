@@ -2,12 +2,29 @@
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/clerk-react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 
 const NotePage = () => {
     const {user} = useUser();
+    const create = useMutation(api.notes.create);
+
+    const onCreate = async () => {
+        const promise = create({
+            title: "untitled",
+        });
+
+        toast.promise(promise, {
+            loading: "Creating note...",
+            success: "Note created!",
+            error: "Error creating note.",
+        })
+    }
+
     return ( 
         <div className="h-full flex flex-col items-center justify-center space-y-4">
             <Image src="/bulb.png" alt="" height="450" width="450" className="dark:hidden opacity-80" /> 
@@ -19,7 +36,7 @@ const NotePage = () => {
                     </span>
                 to your ROIDS
             </h2>
-            <Button>
+            <Button onClick={onCreate}>
                 <PlusCircle className="h-4 w-4 mr-2" />
                 Create a Note
             </Button>

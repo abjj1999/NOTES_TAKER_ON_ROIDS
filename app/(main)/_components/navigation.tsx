@@ -1,15 +1,21 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronLeftIcon, MenuIcon } from "lucide-react";
+import { ChevronLeft, ChevronLeftIcon, MenuIcon, PlusCircle, Search, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import UserItem from "./UserItem";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import Item from "./Item";
+import { toast } from "sonner";
 
 const Navigation = () => {
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const notes = useQuery(api.notes.get)
+    const create = useMutation(api.notes.create)
 
     const isResizingRef = useRef(false);
     const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -95,6 +101,18 @@ const Navigation = () => {
         }
     }
 
+    const handleCreate = async () => {
+        const promise = create({
+            title: "untitled",
+        })
+
+        toast.promise(promise, {
+            loading: "Creating note...",
+            success: "Note created!",
+            error: "Error creating note"
+        })
+    }
+
   return (
     <>
       <aside ref={sidebarRef}
@@ -112,9 +130,16 @@ const Navigation = () => {
         </div>
         <div className="">
           <UserItem />
+          <Item onClick={() => {}} label="Search" icon={Search} isSearch/>
+          <Item onClick={() => {}} label="Settings" icon={Settings} />
+          <Item onClick={handleCreate} label="New" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          <p>Docs</p>
+          {notes?.map((note) => (
+            <p>
+                {note.title}
+            </p>
+          ))}
         </div>
         {/* bold line to increase width */}
         <div onMouseDown={handleMouseDown} onClick={resetWidth} className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0" />
