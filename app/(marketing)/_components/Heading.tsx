@@ -11,8 +11,8 @@ const Heading: React.FC<Props> = ({ title }) => {
     return (
         <div className="max-w-3xl space-y-4">
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold">
-                Ideas, Notes, and Plans on <br/>
-                <span className="underline flex justify-center items-center">ROIDS
+                Ideas, Notes, and Plans on <br/> 
+                <span className="mt-1 underline flex justify-center items-center">ROIDS
                 <Syringe className='ml-3' />
                 </span>
             </h1>
