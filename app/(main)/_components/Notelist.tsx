@@ -61,7 +61,7 @@ const NoteList = ({
             <p
                 style={{paddingLeft: level ? `${(level * 12) + 25}px` : undefined}}
             className={cn(
-                "hidden text-sm font-medium text-muted-foreground/80",
+                "hidden text-sm font-medium text-muted-foreground/80 ml-2",
                 expanded && "last:block",
                 level === 0 && "hidden"
             )}>

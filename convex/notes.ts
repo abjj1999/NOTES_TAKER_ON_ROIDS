@@ -57,3 +57,55 @@ export const create = mutation({
     }
     
 })
+
+export const archive = mutation({
+    args: {
+        id: v.id("notes"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const existingNote = await ctx.db.get(args.id);
+
+        if (!existingNote) {
+            throw new Error("Note not found");
+        }
+
+        if (existingNote.userId !== userId) {
+            throw new Error("Not authorized");
+        }
+
+        const recusiveArchive = async (noteId: Id<"notes">) => {
+            const children = await ctx.db.query("notes")
+            .withIndex("by_user_parent", (q) =>(
+                q.eq("userId", userId)
+                .eq("parentNote", noteId)
+            
+            )).collect();
+
+            for (const child of children) {
+                await ctx.db.patch(child._id, {
+                    isArchived:true
+                })
+                await recusiveArchive(child._id);
+            }
+        }
+
+
+
+        const note = await ctx.db.patch(args.id, {
+            isArchived: true,
+        });
+
+        await recusiveArchive(args.id);
+        
+        return note;
+
+    }
+})
