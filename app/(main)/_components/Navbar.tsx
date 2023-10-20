@@ -3,9 +3,10 @@ import {useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
 import { Id } from "@/convex/_generated/dataModel";
-import { MenuIcon } from "lucide-react";
+import {  MenuIcon } from "lucide-react";
 import { Title } from "./Title";
 import { Banner } from "./Banner";
+import Menu from "./Menu";
 // import { Banner } from "./Banner";
 
 
@@ -27,8 +28,11 @@ export const Navbar = ({
 
     if(note === undefined) {
         return (
-            <nav className="bg-background dark:bg-[#131313] px-3 py-2 w-full flex items-center gap-x-4">
+            <nav className="bg-background dark:bg-[#131313] px-3 py-2 w-full flex items-center gap-x-4 justify-between">
                 <Title.Skeleton />
+                <div className="flex items-center gap-x-2">
+                    <Menu.Skeleton />
+                </div>
             </nav>
         )
     };
@@ -47,6 +51,9 @@ export const Navbar = ({
                 }
                 <div className="flex items-center justify-between w-full">
                     <Title iniatialData={note} />
+                    <div className="flex items-center gap-x-2">
+                        <Menu noteId={note._id} />
+                    </div>
                 </div>
             </nav>
             {
