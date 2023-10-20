@@ -27,7 +27,7 @@ const TrashBox = () => {
     });
 
     const onClick = (noteId: string) => {
-        // router.push(`/notes/${noteId}`)
+        router.push(`/notes/${noteId}`)
     }
 
     const onRestore = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, noteId: Id<"notes">) => {

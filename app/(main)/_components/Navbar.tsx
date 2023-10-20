@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { Id } from "@/convex/_generated/dataModel";
 import { MenuIcon } from "lucide-react";
 import { Title } from "./Title";
+import { Banner } from "./Banner";
+// import { Banner } from "./Banner";
 
 
 
@@ -47,6 +49,13 @@ export const Navbar = ({
                     <Title iniatialData={note} />
                 </div>
             </nav>
+            {
+                note.isArchived && (
+                    
+                        <Banner noteId={note._id} />
+                    
+                )
+            }
        </>
      );
 }
