@@ -4,6 +4,7 @@ import './globals.css'
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { ConvexClientProvider } from "@/components/providers/convex-provider"
 import { Toaster } from 'sonner'
+import { ModelProvider } from '@/components/providers/model-provider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default function RootLayout({
             storageKey="ROIDS-theme"
           >
             <Toaster position='bottom-center' />
+            <ModelProvider />
         {children}
           </ThemeProvider>
            

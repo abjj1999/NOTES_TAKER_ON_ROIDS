@@ -3,6 +3,7 @@ import Spinner from "@/components/Spinner";
 import { useConvexAuth } from "convex/react";
 import { redirect } from "next/navigation";
 import Navigation from "./_components/navigation";
+import { SearchCommand } from "@/components/searchCommand";
 
 
 
@@ -25,6 +26,7 @@ const NotesLayout = ({children
         <div className="h-full flex dark:bg-[#131313]">
             <Navigation/>
             <main className="flex-1 h-full overflow-y-auto">
+                <SearchCommand />
                 {children}
             </main>
         </div>

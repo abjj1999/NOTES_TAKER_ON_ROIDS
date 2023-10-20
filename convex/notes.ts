@@ -221,4 +221,24 @@ export const remove = mutation({
     }
 })
 
-    
+export const getSearch = query({
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const notes = await ctx.db.query("notes")
+            .withIndex("by_user", (q) => (
+                q.eq("userId", userId)
+            ))
+            .filter((q) => (
+                q.eq(q.field("isArchived"), false)
+            )).order("desc").collect();
+
+        return notes;
+    }
+})
