@@ -1,11 +1,12 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
+import ConfirmModal from "@/components/models/confirm-modal";
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery, useMutation } from "convex/react";
-import { Search, Undo } from "lucide-react";
+import { Search, Trash, Undo } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -97,14 +98,14 @@ const TrashBox = () => {
               >
                 <Undo className="h-4 w-4 text-muted-foreground" />
               </div>
-              {/* <ConfirmModal onConfirm={() => onRemove(note._id)}>
+              <ConfirmModal onConfirm={() => onRemove(note._id)}>
                 <div
                   role="button"
                   className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
                 >
                   <Trash className="h-4 w-4 text-muted-foreground" />
                 </div>
-              </ConfirmModal> */}
+              </ConfirmModal>
             </div>
           </div>
         ))}
