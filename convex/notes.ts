@@ -317,3 +317,68 @@ export const update = mutation({
     }
     
 });
+
+export const removeIcon = mutation({
+    args:{
+        id: v.id("notes"),
+    
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const existingNote = await ctx.db.get(args.id);
+
+        if (!existingNote) {
+            throw new Error("Note not found");
+        }
+
+        if (existingNote.userId !== userId) {
+            throw new Error("Not authorized");
+        }
+
+        const note = await ctx.db.patch(args.id, {
+            icon: undefined,
+        });
+
+        return note;
+    }
+})
+
+
+export const removeCoverImage = mutation({
+    args:{
+        id: v.id("notes"),
+    
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Not logged in");
+        }
+
+        const userId = identity.subject;
+
+        const existingNote = await ctx.db.get(args.id);
+
+        if (!existingNote) {
+            throw new Error("Note not found");
+        }
+
+        if (existingNote.userId !== userId) {
+            throw new Error("Not authorized");
+        }
+
+        const note = await ctx.db.patch(args.id, {
+            coverImage: undefined,
+        });
+
+        return note;
+    }
+})
