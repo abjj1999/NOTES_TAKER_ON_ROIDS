@@ -55,6 +55,9 @@ const Item = ({
         if (!id) return;
 
         const promise = archive({id})
+            .then(() => {
+                router.push(`/notes`);
+            })
        
             toast.promise(promise, {
                 loading: "Archiving note...",
@@ -78,12 +81,12 @@ const Item = ({
             if(!expanded) {
                 onExpand?.();
             }
-            // router.push(`/notes/${noteId}`);
-            toast.promise(promise, {
-                loading: "Creating note...",
-                success: "Note created!",
-                error: "Failed to create note"
-            })
+            router.push(`/notes/${noteId}`);
+        })
+        toast.promise(promise, {
+            loading: "Creating note...",
+            success: "Note created!",
+            error: "Failed to create note"
         })
 
     }

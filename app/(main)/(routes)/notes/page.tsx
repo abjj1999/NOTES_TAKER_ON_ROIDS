@@ -7,16 +7,21 @@ import { api } from "@/convex/_generated/api";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 const NotePage = () => {
     const {user} = useUser();
     const create = useMutation(api.notes.create);
+    const router = useRouter();
 
+    
     const onCreate = async () => {
         const promise = create({
             title: "untitled",
-        });
+        }).then((noteId) => {
+            router.push(`/notes/${noteId}`);
+        })
 
         toast.promise(promise, {
             loading: "Creating note...",

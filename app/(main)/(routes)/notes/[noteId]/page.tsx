@@ -1,10 +1,13 @@
 "use client";
-import {useQuery} from "convex/react";
+import {useMutation, useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Toolbar } from "@/components/Toolbar";
 import { Cover } from "@/components/Cover";
 import { Skeleton } from "@/components/ui/skeleton";
+// import  Editor  from "@/components/Editor";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
 
 interface NoteIdPageProps {
     params: {
@@ -15,9 +18,18 @@ interface NoteIdPageProps {
 const NoteIdPage = (
     {params}: NoteIdPageProps
 ) => {
+    const Editor = useMemo(() => dynamic(() => import("@/components/Editor"), {ssr: false}), []);
     const note = useQuery(api.notes.getById, {
         noteId: params.noteId
     });
+    const update = useMutation(api.notes.update);
+
+    const onChange = (content: string) => {
+        update({
+            id: params.noteId,
+            content
+        });
+    }
 
     if(note === undefined) {
         return (
@@ -44,6 +56,7 @@ const NoteIdPage = (
             <Cover url={note.coverImage} />
             <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
                 <Toolbar initialData={note} />
+                <Editor onChange={onChange} initialContent={note.content} />
             </div>
         </div>
      );

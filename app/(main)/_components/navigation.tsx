@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronLeftIcon, MenuIcon, PlusCircle, PlusIcon, Search, Settings, Trash } from "lucide-react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import UserItem from "./UserItem";
@@ -25,6 +25,7 @@ const Navigation = () => {
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
     const params = useParams();
+    const router = useRouter();
     // const notes = useQuery(api.notes.getSidebar)
 
     const create = useMutation(api.notes.create)
@@ -116,6 +117,8 @@ const Navigation = () => {
     const handleCreate = async () => {
         const promise = create({
             title: "untitled",
+        }).then((noteId) => {
+            router.push(`/notes/${noteId}`)  
         })
 
         toast.promise(promise, {
